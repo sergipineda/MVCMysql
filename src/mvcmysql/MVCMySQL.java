@@ -6,14 +6,15 @@
 
 package mvcmysql;
 
-import static com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceAsStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static mvcmysql.MVCMySQL.hola;
+import static mvcmysql.MVCMySQL.nom;
 import mvcmysql.view.VistaActors;
 import mvcmysql.model.Model;
 import mvcmysql.controller.Controlador;
@@ -23,17 +24,19 @@ import mvcmysql.controller.Controlador;
  * @author profe
  */
 public class MVCMySQL  {
-//    static {
-//    loadProperties();
-//}
-
-        
     
+
+
+    static String nom;
+    static String pass;
+    static String url;
+    
+    static String hola[];
     static Controlador controlador;
     
     static VistaActors vista=new VistaActors();
     
-    static Model modelo=new Model ("jdbc:mysql://localhost:3306/world","root","alumne");
+   
     
 
    
@@ -43,41 +46,72 @@ public class MVCMySQL  {
     public static void main(String[] args) 
     {
         
-        // TODO code application logic here
+       
         
+        // TODO code application logic here
+          Model modelo=new Model ("");
         controlador=new Controlador(modelo, vista);
         
     }
    
-//    static Properties prop;
-//   private static void loadProperties() {
-//    prop = new Properties();
-//    InputStream in = MVCMySQL.class
-//            .getResourceAsStream("mysql.properties");
-//            
-//    try {
-//        prop.load(in);
-//        in.close();
-//    } catch (IOException e) {
-//        e.printStackTrace();
-//    }}
-    public static void propiedades() {
-    Properties properties = new Properties();
 
-		try {
-			properties.load(new FileInputStream(
-					"mysql.properties"));
-			
-			
-			// Display all the values in the form of key value
-			for (String key : properties.stringPropertyNames()) {
-				String value = properties.getProperty(key);
-				System.out.println("Key:- " + key + "Value:- " + value);
-			}
-
-		} catch (IOException e) {
-			System.out.println("Exception Occurred" + e.getMessage());
-		}
-
+    
+    @SuppressWarnings("empty-statement")
+     public static String conexio() throws SQLException {
+   try {
    
-}}
+
+   Properties propiedades = new Properties();
+    
+   
+   propiedades
+     .load(new FileInputStream(
+       "mysql.properties"));
+ 
+  
+    nom = propiedades.getProperty("usuari");
+    pass = propiedades.getProperty("pass");
+    url = propiedades.getProperty("url");
+  Connection conexio=null;
+    conexio= DriverManager.getConnection(url,nom,pass);
+       
+    
+  } catch (FileNotFoundException e) {
+   System.out.println("Error, El archivo no exite");
+  } catch (IOException e) {
+   System.out.println("Error, No se puede leer el archivo");
+  }
+        return "";
+        
+     }
+      public static Connection GetConnection()
+    {
+        Connection conexion=null;
+     
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            String servidor = "jdbc:mysql://localhost/DBVentas";
+            String usuarioDB="root";
+            String passwordDB="030191";
+            conexion= DriverManager.getConnection(servidor,usuarioDB,passwordDB);
+        }
+        catch(ClassNotFoundException ex)
+        {
+            
+            conexion=null;
+        }
+        catch(SQLException ex)
+        {
+            conexion=null;
+        }
+        catch(Exception ex)
+        {
+            conexion=null;
+        }
+        finally
+        {
+            return conexion;
+        }
+    }
+}

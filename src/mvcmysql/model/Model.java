@@ -40,6 +40,10 @@ public class Model {
         crearConnexio(url, usuari, password);
     }
 
+    public Model(String conexio) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public void finalize() throws Throwable {
         if(sentencia!=null) sentencia.close();
         if(resultSet!=null) resultSet.close();
